@@ -24,12 +24,12 @@ class StateMachine<
   constructor(config: StateMachineConfig<TState, TEvent, TContext>, context: TContext) {
     this.config = config;
     this.context = context;
-    this.currentState = config.initial
-    this.history = [config.initial]
+    this.currentState = config.initial;
+    this.history = [config.initial];
   }
 
   saveHistory = (state: TState): void => {
-    this.history.push(state)
+    this.history.push(state);
   }
 
   runOnEntry = async (state: TState, context: TContext): Promise<void> => {
@@ -40,7 +40,7 @@ class StateMachine<
 
   runOnExit = async (state: TState, context: TContext): Promise<void> => {
     if (this.config.state[state]?.onExit) {
-      await this.config.state[state].onExit(context)
+      await this.config.state[state].onExit(context);
     }
   }
 
@@ -50,23 +50,23 @@ class StateMachine<
   }
 
   transition = async (event: TEvent): Promise<boolean> => {
-    const currentStateObj = this.config.state[this.currentState]
+    const currentStateObj = this.config.state[this.currentState];
     if (currentStateObj?.on?.[event] === undefined) {
       console.log(`${event} is not valid in ${this.getCurrentState()}`);
       return false;
     }
     if (event in currentStateObj.on) {
       const nextState = currentStateObj.on[event];
-      await this.runOnExit(this.currentState, this.context)
+      await this.runOnExit(this.currentState, this.context);
       await this.setCurrentState(nextState);
-      await this.runOnEntry(this.currentState, this.context)
+      await this.runOnEntry(this.currentState, this.context);
       return true;
     }
     return false;
   }
 
   getCurrentState(): TState {
-    return this.currentState
+    return this.currentState;
   }
   getContext(): TContext {
     return this.context;
@@ -117,7 +117,7 @@ const machine = new StateMachine(documentConfig, {
 })
 
 const logCurrentStateAndContext = () => {
-  console.log('\nCurrent State:', machine.getCurrentState(), '\nContext:', machine.getContext())
+  console.log('\nCurrent State:', machine.getCurrentState(), '\nContext:', machine.getContext());
 }
 
 const triggerAndLogEvent = async (event: DocumentEvent): Promise<void> => {
@@ -128,15 +128,15 @@ const triggerAndLogEvent = async (event: DocumentEvent): Promise<void> => {
 }
 
 const testStateMachine = async () => {
-  console.log('State machine test')
-  console.log('Initial state')
+  console.log('State machine test');
+  console.log('Initial state');
   logCurrentStateAndContext();
 
   await triggerAndLogEvent('submit')
   await triggerAndLogEvent('approve');
-  await triggerAndLogEvent('revise')
+  await triggerAndLogEvent('revise');
 
-  console.log('\nHistory:', machine.getHistory())
+  console.log('\nHistory:', machine.getHistory());
   console.log('\n---------------------------FINISH');
 }
 
