@@ -135,7 +135,6 @@ const testStateMachine = async () => {
   await triggerAndLogEvent('submit')
   await triggerAndLogEvent('approve');
   await triggerAndLogEvent('revise');
-  console.log('\nlastModified has changed in the above result due to revise.')
 
   console.log('\nHistory:', machine.getHistory());
   console.log('\n---------------------------FINISH');
